@@ -1,0 +1,96 @@
+/**
+ * 
+ */
+package com.lmonkiewicz.example.model;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+/**
+ * @author hp
+ *
+ */
+public class LogicTesting {
+
+	public static void main(String[] args) {
+
+//Test Data for 2 port compl and 1 TeCompl common PT Rule Type
+		List<PortCompl> listOfPortCompl = new ArrayList<>();
+		PortCompl portCompl = new PortCompl();
+		portCompl.setComplTag("NO_EQUITY12");
+		portCompl.setPortComplId(1234l);
+		portCompl.setSeverityOverride(10);
+		// listOfPortCompl.add(portCompl);
+
+		PortCompl portComplSecond = new PortCompl();
+		portComplSecond.setComplTag("PORT_OF_VALUE");
+		portComplSecond.setPortComplId(4589l);
+		portComplSecond.setSeverityOverride(20);
+		// listOfPortCompl.add(portComplSecond);
+
+		List<TeCompl> listOfTeCompl = new ArrayList<>();
+		TeCompl teCompl = new TeCompl();
+		teCompl.setComplTag("NO_EQUITY");
+		teCompl.setTeComplId(1234l);
+		teCompl.setSeverityOverride(10);
+		listOfTeCompl.add(teCompl);
+
+		TeCompl teComplSecond = new TeCompl();
+		teComplSecond.setComplTag("PCT_OF_VALUE");
+		teComplSecond.setTeComplId(1234l);
+		teComplSecond.setSeverityOverride(10);
+		listOfTeCompl.add(teComplSecond);
+
+		// From the list of the common elements get the list of the portCompl and
+		// TeCompl elements
+
+		List<String> listOfCommonElements = listOfPortCompl.stream().filter(Objects::nonNull)
+				.map(PortCompl::getComplTag).filter(complTagPortCompl -> listOfTeCompl.stream().filter(Objects::nonNull)
+						.map(TeCompl::getComplTag).collect(Collectors.toSet()).contains(complTagPortCompl))
+				.collect(Collectors.toList());
+
+		listOfCommonElements.stream().forEach(System.out::println);
+
+		// Below is the common List Of elements
+		System.out.println("List of Common PortCompl Objects");
+		List<PortCompl> listOfCommontPortComplElements = listOfPortCompl.stream().filter(Objects::nonNull)
+				.filter(portComplObj -> listOfCommonElements.stream().collect(Collectors.toSet())
+						.contains(portComplObj.getComplTag()))
+				.collect(Collectors.toList());
+
+		listOfCommontPortComplElements.stream().forEach(System.out::println);
+		System.out.println("================");
+		// Step 1 we have the common list of the elements to be tested more.
+		List<PortCompl> listOfDistinctPortComplElements = listOfPortCompl.stream().filter(Objects::nonNull)
+				.filter(portComplObj -> !listOfCommonElements.stream().collect(Collectors.toSet())
+						.contains(portComplObj.getComplTag()))
+				.collect(Collectors.toList());
+
+		// Below is the distinct set of elements
+		System.out.println("List of distinct elements of PotCompl");
+		listOfDistinctPortComplElements.stream().forEach(System.out::println);
+
+		// Below is the common List Of elements
+		System.out.println("List of Common TeCompl Objects");
+		List<TeCompl> listOfCommontTeComplElements = listOfTeCompl.stream().filter(Objects::nonNull)
+				.filter(teComplObj -> listOfCommonElements.stream().collect(Collectors.toSet())
+						.contains(teComplObj.getComplTag()))
+				.collect(Collectors.toList());
+
+		listOfCommontTeComplElements.stream().forEach(System.out::println);
+		System.out.println("================");
+		// Step 1 we have the common list of the elements to be tested more.
+		List<TeCompl> listOfDistinctTeComplElements = listOfTeCompl.stream().filter(Objects::nonNull)
+				.filter(teComplObj -> !listOfCommonElements.stream().collect(Collectors.toSet())
+						.contains(teComplObj.getComplTag()))
+				.collect(Collectors.toList());
+
+		// Below is the distinct set of elements
+		System.out.println("List of distinct elements of TeCompl");
+		listOfDistinctTeComplElements.stream().forEach(System.out::println);
+
+	}
+
+}
